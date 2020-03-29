@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers\API;
+
 use Illuminate\Http\Request;
-use App\User;
-//фасад
-use Illuminate\Support\Facades\Auth;
+use Hash;
+use App\Models\User;
 use Validator;
 
 class RegisterController
@@ -11,27 +11,25 @@ class RegisterController
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
+            'name'     => 'required',
+            'email'    => 'required|email',
             'password' => 'required',
-            //'c_password' => 'required|same:password',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json('Validation Error');
-            //return ('lol');
-        }
-        else{
+            
+        } else {
             $user = User::create([
-                'name' => request('name'),
-                'email' => request('email'),
-                'password' => bcrypt(request('password'))
+                'name'     => request('name'),
+                'email'    => request('email'),
+                'password' => Hash::make(request('password'))
             ]);
             $response = [
                 'success' => true,
-                'data'    => $user->name,
-                'message' => "Регистрация прошла успешно!",
+                'message' => $user->name.', '.'регистрация прошла успешно!',
             ];
+            
             return response()->json($response, 200);
         }
     }

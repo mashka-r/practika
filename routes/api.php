@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,9 +12,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::post('/register', 'API\RegisterController@register');
-Route::post('/login', 'API\LoginController@login');
-//Route::post('/oauth', 'API\LoginController@oauth')->middleware('prov');
+Route::post('/login', 'API\LogController@login');
 Route::middleware('auth:api')->group(function () {
-    Route::post('/logout', 'API\LoginController@logout');
+    Route::post('/logout', 'API\LogController@logout');
 });
