@@ -19,18 +19,20 @@ class LogController extends Controller
         }
         
         $token = $user->createToken('mytoken');
+        
         $response = [
             'succes'     => 'true',
             'message'    => 'Вы успешно прошли аутентификацию!',
             'token_type' => 'Bearer',
             'token'      => $token->accessToken
         ];
-
+        $token->token->save();
         return response()->json($response, 200);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->token->revoke();
+        $request->user()->token()->revoke();
+        return response()->json('Вы вышли', 200);
     }
 }

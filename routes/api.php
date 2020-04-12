@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,5 +15,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', 'API\RegisterController@register');
 Route::post('/login', 'API\LogController@login');
 Route::middleware('auth:api')->group(function () {
-    Route::post('/logout', 'API\LogController@logout');
+    Route::get('/logout', 'API\LogController@logout');
+});
+
+Route::group(['prefix' => 'admin'], function() {
+    Route::post('/login', 'API\LogController@login');
+    Route::middleware('auth:api')->group(function () {
+        Route::get('/show/{id?}', 'API\UserController@show');
+        Route::get('/logout', 'API\LogController@logout');
+});
 });
