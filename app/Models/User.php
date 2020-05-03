@@ -37,6 +37,6 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return (boolean)$this->roles->where('name', 'admin')->count();
+        return (boolean)$this->roles->where('name', 'Admin')->count();
     }
 }

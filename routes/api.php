@@ -20,8 +20,13 @@ Route::middleware('auth:api')->group(function () {
 
 Route::group(['prefix' => 'admin'], function() {
     Route::post('/login', 'API\LogController@login');
+    
     Route::middleware('auth:api')->group(function () {
-        Route::get('/show/{id?}', 'API\UserController@show');
+        Route::get('/delete/{id}', 'API\UserController@delete');
+        Route::post('/create', 'API\UserController@create');
+        Route::resource('/index/{id?}', 'API\UserController');
+        Route::post('/update/{id}', 'API\UserController@update');
+    
         Route::get('/logout', 'API\LogController@logout');
 });
 });
