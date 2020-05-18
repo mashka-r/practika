@@ -34,7 +34,7 @@ class RegisterController
                 'message' => $user->name.', '.'регистрация прошла успешно!',
             ];
             
-            return response()->json($response, 200);
+            return response()->json($response);
         }
     }
 }

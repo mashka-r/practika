@@ -1,33 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use  App\Http\Resources\UserResource;
 use App\Http\Requests\ForUpdateRequest;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\ForStoreRequest;
 use Hash;
 
 class UserController extends Controller
 {
-
-    public function index($id = null)
+    public function index()
     {
-        $this->authorize('index', User::class); 
-
-        if ($id){
-            $users = User::where('id', $id)->get();
-        } else {
-            $users = User::get();
-        }
+        $this->authorize('before', User::class); 
+        $users = User::get();
         return UserResource::collection($users);
     }
 
-    public function create(UserRequest $request)
+    public function store(ForStoreRequest $request)
     {
-        $this->authorize('create', User::class); 
+        $this->authorize('before', User::class); 
 
         $user = User::create([
             'name'     => request('name'),
@@ -42,30 +37,33 @@ class UserController extends Controller
             'message' => 'Регистрация пользователя '.$user->name.' прошла успешно!',
         ];
         
-        return response()->json($response, 200);
+        return response()->json($response);
+    }
+
+    public function show($id)
+    {
+        $this->authorize('before', User::class);
+        $users = User::where('id', $id)->get();
+        return UserResource::collection($users);
     }
 
     public function update(ForUpdateRequest $request, $id)
     {
-        if ($request->name) {
-            User::where('id', $id)
-                ->update(['name' => request('name')]);
-        }
-
-        if ($request->email) {
-            User::where('id', $id)
-                ->update(['email' => request('email')]);
-        }
-
-        if ($request->password) {
-            User::where('id', $id)
-                ->update(['password' => Hash::make(request('password'))]);
-        }
-    }
+        $this->authorize('before', User::class);
+        $user = User::where('id', $id);
+        $user->update($request->all());
  
-    public function delete($id) 
+        $response = [
+            'success' => true,
+            'message' => 'Данные обновлены',
+        ];
+        
+        return response()->json($response);
+    }
+
+    public function destroy($id)
     {
-        $this->authorize('delete', User::class); 
+        $this->authorize('before', User::class); 
 
         $user = User::find($id);
         $user->roles()->detach();
@@ -73,9 +71,9 @@ class UserController extends Controller
 
         $response = [
             'success' => true,
-            'message' => 'Пользователь удален!',
+            'message' => 'Пользователь удален',
         ];
         
-        return response()->json($response, 200);
+        return response()->json($response);
     }
 }

@@ -22,11 +22,7 @@ Route::group(['prefix' => 'admin'], function() {
     Route::post('/login', 'API\LogController@login');
     
     Route::middleware('auth:api')->group(function () {
-        Route::get('/delete/{id}', 'API\UserController@delete');
-        Route::post('/create', 'API\UserController@create');
-        Route::resource('/index/{id?}', 'API\UserController');
-        Route::post('/update/{id}', 'API\UserController@update');
-    
+        Route::resource('users', 'API\UserController');
         Route::get('/logout', 'API\LogController@logout');
 });
 });

@@ -27,12 +27,12 @@ class LogController extends Controller
             'token'      => $token->accessToken
         ];
         $token->token->save();
-        return response()->json($response, 200);
+        return response()->json($response);
     }
 
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
-        return response()->json('Вы вышли', 200);
+        return response()->json('Вы вышли');
     }
 }
